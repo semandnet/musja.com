@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert images to Base64 and decode Base64 back to images with Image-Base64 Converter, created by AI using prompts engineering.">
+    <meta name="keywords" content="image, base64, converter, AI, prompts engineering, artificial intelligence, software, encoding, decoding">
+    <title>Image-Base64 Converter</title>
+    <link rel="stylesheet" href="styles/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Image-Base64 Converter</h1>
+        <form>
+            <div class="mode-selection">
+                <label class="mode-option">
+                    <input type="radio" name="mode" value="encode" checked onchange="toggleFormatOptions(); updateFileInput();">
+                    <span>Encode Image to Base64</span>
+                </label>
+                <label class="mode-option">
+                    <input type="radio" name="mode" value="decode" onchange="toggleFormatOptions(); updateFileInput();">
+                    <span>Decode Base64 to Image</span>
+                </label>
+            </div>
+        </form>        
+        <input type="file" id="fileInput" accept="image/*">
+        <div id="formatSelection" style="display: none;">
+            <label>
+                <input type="checkbox" name="format" value="png" checked>
+                <span>PNG</span>
+            </label>
+            <label>
+                <input type="checkbox" name="format" value="jpeg">
+                <span>JPEG</span>
+            </label>
+        </div>
+        <button onclick="processFile()">Convert and Download</button>
+        <div class="credits">
+            <p class="author-credits">This application was created by <a href="https://chat.openai.com/" target="_blank">ChatGPT</a> using semand's prompts.</p>
+            <div class="logo-container">
+                <a href="https://chat.openai.com/" target="_blank">
+                    <img class="image-style chatgpt-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/ChatGPT_logo.svg/2560px-ChatGPT_logo.svg.png" alt="ChatGPT logo">
+                </a>
+                <a href="https://www.linkedin.com/in/semand/" target="_blank">
+                    <img class="image-style profile-image" src="https://media.licdn.com/dms/image/D4D03AQF0N_amcy03cw/profile-displayphoto-shrink_800_800/0/1680692752166?e=1686182400&v=beta&t=SJlaQzBTj8kd1vCvl9JKnZyut7W-ksChVYPzxpGlENk" alt="Semand's image">
+                </a>
+                <div class="musja">
+                    <a href="https://www.musja.com/" target="_blank">
+                        <span>MUS</span> <span>JA</span>
+                    </a>
+                </div>
+            </div>
+        </div>     
+    </div>
+    <script src="./scripts/scripts.js"></script>
+</body>
+</html>

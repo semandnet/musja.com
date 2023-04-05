@@ -1,0 +1,156 @@
+body {
+    background-color: #3b3a30;
+    font-family: 'Georgia', serif;
+    color: #e8ddcb;
+}
+
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    gap: 1rem;
+}
+
+.mode-selection {
+    display: flex;
+    gap: 1rem;
+}
+
+.mode-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#fileInput {
+    background-color: #dcb35c;
+    border: 2px solid #b88a4f;
+    color: #3b3a30;
+    font-size: 1rem;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+
+button {
+    background-color: #dcb35c;
+    border: 2px solid #b88a4f;
+    color: #3b3a30;
+    font-size: 1rem;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+button:hover {
+    background-color: #b88a4f;
+    border-color: #dcb35c;
+    color: #e8ddcb;
+}
+
+.credits {
+    font-size: 1rem;
+    margin-top: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 10px;
+}
+
+.image-style {
+    width: 100px;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+    border-radius: 50%;
+    border: 2px solid #dcb35c;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s;
+}
+
+.image-style:hover {
+    border-color: #b88a4f;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.credits p {
+    font-style: italic;
+    text-align: center;
+}
+
+.credits a {
+    color: #e8ddcb;
+    text-decoration: none;
+}
+
+.credits a:hover {
+    text-decoration: underline;
+}
+
+.author-credits {
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.author-credits a {
+    color: #dcb35c;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.author-credits a:hover {
+    color: #b88a4f;
+}
+
+.musja {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.musja a {
+    background-color: #dcb35c;
+    padding: 10px;
+    border-radius: 5px;
+    transition: all 0.3s;
+    font-size: 2.1rem;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.musja a span {
+    line-height: 2rem;
+}
+
+.musja a:hover {
+    background-color: #b88a4f;
+    text-decoration: none;
+}
+
+.musja span:nth-child(1)::after {
+    margin-right: 0.5rem;
+    content: "E";
+    color: transparent;
+    text-shadow: 0 0 1px rgba(232, 221, 203, 0.3);
+}
+
+.musja span:nth-child(2)::after {
+    margin-right: 0.5rem;
+    content: "R";
+    color: transparent;
+    text-shadow: 0 0 1px rgba(232, 221, 203, 0.3);
+}
+
