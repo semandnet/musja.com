@@ -12,6 +12,7 @@ var POP = {
     HEIGHT: 480,
     nextBubble: 100,
     entities: [],
+    paused: false,
     wave: {
         total: 10,
         x: -25,
@@ -58,6 +59,16 @@ var POP = {
             checkCollision = true;
         }
 
+        if (POP.powerUp.active) {
+            POP.powerUp.timer--;
+
+            if (POP.powerUp.timer <= 0) {
+                POP.powerUp.active = false;
+                POP.powerUp.type = null;
+            }
+        }
+
+
         for (i = 0; i < POP.entities.length; i += 1) {
             POP.entities[i].update();
 
@@ -74,6 +85,13 @@ var POP = {
                         ));
                     }
                     POP.score.hit += 1;
+                    POP.score.points += Math.round(10 * (POP.entities[i].r / 20));
+
+                    if (POP.entities[i].powerUp) {
+                        POP.powerUp.active = true;
+                        POP.powerUp.type = 'size_increase';
+                        POP.powerUp.timer = 200;
+                    }
                 } else {
                     POP.entities.push(new POP.Particle(
                         POP.Input.x,
@@ -82,7 +100,16 @@ var POP = {
                         'rgba(255,0,0,' + Math.random() * 1 + ')'
                     ));
                 }
-                POP.entities[i].remove = hit;
+
+                if (POP.powerUp.active) {
+                    if (POP.powerUp.type === 'size_increase') {
+                        POP.entities[i].r *= 1.5;
+                    }
+                }
+
+                if (hit) {
+                    POP.entities[i].remove = true;
+                }
                                     
             }
 
@@ -103,36 +130,49 @@ var POP = {
     render: function() {
         var i;
 
-        POP.Draw.rect(0, 0, POP.WIDTH, POP.HEIGHT, "#3b3a30");
-
-
-        for (i = 0; i < POP.wave.total; i++) {
-                POP.Draw.circle(
-                    POP.wave.x + POP.wave.offset + (i * POP.wave.r),
-                    POP.wave.y,
-                    POP.wave.r,
-                    "#5a5c5b"
-                );
-            }
-
-            for (i = 0; i < POP.entities.length; i += 1) {
-                POP.entities[i].render();
-            }
-
-            POP.Draw.text("Hit: " + POP.score.hit, 20, 30, 14, "#e8ddcb");
-            POP.Draw.text("Escaped: " + POP.score.escaped, 20, 50, 14, "#e8ddcb");
-            POP.Draw.text("Accuracy: " + POP.score.accuracy + "%", 20, 70, 14, "#e8ddcb");
-        },
+        var gradient = POP.ctx.createLinearGradient(0, 0, 0, POP.HEIGHT);
+        gradient.addColorStop(0, "#3b3a30");
+        gradient.addColorStop(1, "#5a5c5b");
     
-        loop: function() {
+        POP.Draw.rect(0, 0, POP.WIDTH, POP.HEIGHT, gradient);
+ 
+        for (i = 0; i < POP.entities.length; i += 1) {
+            POP.entities[i].render();
+        }
+
+        POP.Draw.text("Hit: " + POP.score.hit, 20, 30, 14, "#e8ddcb");
+        POP.Draw.text("Escaped: " + POP.score.escaped, 20, 50, 14, "#e8ddcb");
+        POP.Draw.text("Accuracy: " + POP.score.accuracy + "%", 20, 70, 14, "#e8ddcb");
+
+        POP.Draw.text("Score: " + POP.score.hit * 10, 20, 90, 14, "#e8ddcb");
+
+        POP.Draw.rect(POP.WIDTH - 50, 10, 40, 20, "#e8ddcb");
+        POP.Draw.text("||", POP.WIDTH - 45, 25, 14, "#3b3a30");
+    
+    },
+    
+    loop: function() {
+        if (!POP.paused) {
             requestAnimFrame(POP.loop);
             POP.update();
             POP.render();
-        },
-    
-        collides: function(a, b) {
-            var distance_squared = (Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
-            return (distance_squared < Math.pow(a.r + b.r, 2));
+        } else {
+            POP.Draw.text("PAUSED", POP.WIDTH / 2 - 55, POP.HEIGHT / 2, 30, "#fff");
+        }
+    },
+
+    collides: function(a, b) {
+        var distance_squared = (Math.pow(a.x - b.x, 2) + Math.pow(a.y - b.y, 2));
+        return (distance_squared < Math.pow(a.r + b.r, 2));
+    }
+};
+
+    POP.togglePause = function () {
+        if (POP.paused) {
+            POP.paused = false;
+            POP.loop();
+        } else {
+            POP.paused = true;
         }
     };
     
@@ -204,31 +244,54 @@ var POP = {
             document.addEventListener("mouseup", function(e) {
                 self.tapped = false;
             }, false);
+
+            document.addEventListener("mousedown", function (e) {
+                var mouseX = e.pageX - POP.ctx.canvas.offsetLeft;
+                var mouseY = e.pageY - POP.ctx.canvas.offsetTop;
+
+                if (mouseX > POP.WIDTH - 50 && mouseX < POP.WIDTH - 10 && mouseY > 10 && mouseY < 30) {
+                    POP.togglePause();
+                }
+            }, false);
     
             POP.Input.start();
         }
     };
     
-    POP.Bubble = function() {
+    const bubbleColors = ["rgba(255, 0, 0, 0.7)", "rgba(0, 255, 0, 0.7)", "rgba(0, 0, 255, 0.7)", "rgba(255, 255, 0, 0.7)"];
+
+    POP.powerUp = {
+        active: false,
+        type: null,
+        timer: 0,
+    };
+
+    POP.Bubble = function () {
         this.type = "bubble";
         this.r = (Math.random() * 20) + 10;
         this.speed = (Math.random() * 3) + 1;
         this.x = (Math.random() * (POP.WIDTH - this.r * 2)) + this.r;
         this.y = POP.HEIGHT + this.r;
+        this.color = bubbleColors[Math.floor(Math.random() * bubbleColors.length)]; 
+        this.powerUp = Math.random() < 0.1; 
         this.remove = false;
-    
-        this.update = function() {
+
+        this.update = function () {
             this.y -= this.speed;
             this.x += Math.sin(POP.wave.time) * 2;
-    
+            this.r += Math.sin(POP.wave.time) * 0.1;
+
             if (this.y < -this.r) {
                 POP.score.escaped += 1;
                 this.remove = true;
             }
         };
-    
-        this.render = function() {
-            POP.Draw.circle(this.x, this.y, this.r, "rgba(218, 227, 243, 0.7)");
+
+        this.render = function () {
+            POP.Draw.circle(this.x, this.y, this.r, this.color);
+            if (this.powerUp) {
+                POP.Draw.text("+", this.x - 3, this.y + 3, 10, "#FFF");
+            }
         };
     };
     
