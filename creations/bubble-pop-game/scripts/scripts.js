@@ -216,12 +216,19 @@ var POP = {
             e.preventDefault();
             POP.Input.set(e.touches[0].pageX, e.touches[0].pageY);
         },
-    
+
         onTouchEnd: function(e) {
             e.preventDefault();
             POP.Input.tapped = false;
+        
+            var touchX = e.changedTouches[0].pageX - POP.ctx.canvas.offsetLeft;
+            var touchY = e.changedTouches[0].pageY - POP.ctx.canvas.offsetTop;
+        
+            if (touchX > POP.WIDTH - 50 && touchX < POP.WIDTH - 10 && touchY > 10 && touchY < 30) {
+                POP.togglePause();
+            }
         },
-    
+        
         start: function() {
             const gameCanvas = document.getElementById('gameCanvas');
             gameCanvas.addEventListener('touchstart', POP.Input.onTouchStart, false);
